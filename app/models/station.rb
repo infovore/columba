@@ -19,4 +19,9 @@ class Station < ActiveRecord::Base
       :number_empty_docks => station_hash['nbEmptyDocks'].to_i
     )
   end
+
+  def self.nearest_to(lat,lon)
+    srid = 4326
+    order("ST_Distance(stations.latlon, ST_GeomFromText('POINT (#{lat} #{lon})', #{srid}))").limit(1).first
+  end
 end
