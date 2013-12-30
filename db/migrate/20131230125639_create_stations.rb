@@ -7,8 +7,8 @@ class CreateStations < ActiveRecord::Migration
       t.point :latlon, :geographic => true
       t.boolean :is_installed
       t.boolean :is_locked
-      t.integer :install_date
-      t.integer :removal_date, :default => nil
+      t.datetime :install_date
+      t.datetime :removal_date, :default => nil
       t.boolean :is_temporary
       t.integer :number_bikes
       t.integer :number_docks

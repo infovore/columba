@@ -24,8 +24,8 @@ ActiveRecord::Schema.define(version: 20131230125639) do
     t.spatial  "latlon",             limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.boolean  "is_installed"
     t.boolean  "is_locked"
-    t.integer  "install_date"
-    t.integer  "removal_date"
+    t.datetime "install_date"
+    t.datetime "removal_date"
     t.boolean  "is_temporary"
     t.integer  "number_bikes"
     t.integer  "number_docks"
