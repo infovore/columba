@@ -1,0 +1,9 @@
+development:
+  adapter: postgis
+  encoding: unicode
+  database: bikecompass_development
+  username: dbuser
+  password: dbp
+  pool: 5
+  timeout: 5000
+
