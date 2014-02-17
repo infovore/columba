@@ -1,3 +1,8 @@
+span.clear {
+  display: block;
+  clear: both;
+}
+
 html,
 body {
   margin:0;
@@ -11,7 +16,7 @@ body {
   position:relative;
 }
 #header {
-  background:#ff0;
+  background:#f3f3f3;
   padding:10px;
   h1 {
     font-weight: bold;
@@ -25,7 +30,7 @@ body {
 
   #compass {
     width: 320px;
-    height: 320px;
+    height: 330px;
     background: image-url('rose.png') no-repeat;
 
     #rose {
@@ -77,14 +82,28 @@ body {
 }
 
 #deets {
-  table {
-    width: 320px;
-    th, td {
-      padding: 5px 10px;
-      text-align: center;
-    }
-    th {
-      font-weight: bold;
-    }
+  margin: 20px 0 0;
+  padding: 0 10px;
+  width: 300px;
+  h2 {
+    font-weight: bold;
+    font-size: 24px;
+    margin: 0 0 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+  }
+  .dist {
+    float: left;
+    font-size: 30px;
+    width: 100px;
+  }
+  .racks {
+    color: #888;
+    float: right;
+    font-size: 24px;
+    padding-top: 3px;
+  }
+  span.free {
+    font-weight: bold;
   }
 }

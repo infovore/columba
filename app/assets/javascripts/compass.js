@@ -57,10 +57,24 @@ function distanceBetween(lat1,lon1,lat2,lon2){
   return [d,arc]
 }
 
+function distanceStringFromKm(km) {
+  var distanceInK = km.toFixed(2);
+  var string = "";
+  if(distanceInK >= 1) {
+    string = distanceInK + "km";
+  } else if(distanceInK >= 0.01) {
+    distanceInM = distanceInK * 1000;
+    string = distanceInM + "m";
+  } else {
+    string = "here!";
+  }
+  return string;
+}
+
 function pointCompassAtStation(data, currentPos) {
   var distance = distanceBetween(data.lat, data.lon, currentPos.coords.latitude, currentPos.coords.longitude);
   // get latlon from station
-  $("#deets .dist").text(distance[0].toFixed(2) + "km");
+  $("#deets .dist").text(distanceStringFromKm(distance[0]));
   // work out heading
   $('#arrow').css('-webkit-transform','rotate(' + distance[1] + 'deg)');		
 
