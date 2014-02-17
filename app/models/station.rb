@@ -14,7 +14,7 @@ class Station < ActiveRecord::Base
 
   scope :by_proximity, ->(lat,lon) {
     srid = 4326
-    order("ST_Distance(stations.latlon, ST_GeomFromText('POINT (#{lat} #{lon})', #{srid}))")
+    order("ST_Distance(stations.latlon, ST_GeomFromText('POINT (#{lon} #{lat})', #{srid}))")
   }
 
   set_rgeo_factory_for_column(:latlon,
@@ -25,7 +25,7 @@ class Station < ActiveRecord::Base
     station.update(
       :original_id => station_hash['id'],
       :name => station_hash['name'],
-      :latlon => "POINT(#{station_hash['lat']} #{station_hash['long']})",
+      :latlon => "POINT(#{station_hash['long']} #{station_hash['lat']})",
       :is_installed => station_hash['installed'].eql?('true'),
       :is_locked => station_hash['locked'].eql?('true'),
       :install_date => station_hash['installDate'] ? Time.at(station_hash['installDate'].to_i / 1000).to_datetime : nil,
