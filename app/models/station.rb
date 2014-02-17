@@ -3,6 +3,20 @@ class Station < ActiveRecord::Base
   delegate :lat, :to => :latlon
   delegate :lon, :to => :latlon
 
+  scope :open, -> {
+    where(is_installed: true,
+          is_locked: false)
+  }
+
+  scope :available, -> {
+    open.where("number_empty_docks > 0")
+  }
+
+  scope :by_proximity, ->(lat,lon) {
+    srid = 4326
+    order("ST_Distance(stations.latlon, ST_GeomFromText('POINT (#{lat} #{lon})', #{srid}))")
+  }
+
   set_rgeo_factory_for_column(:latlon,
     RGeo::Geographic.spherical_factory(:srid => 4326))
 
@@ -24,7 +38,6 @@ class Station < ActiveRecord::Base
   end
 
   def self.nearest_to(lat,lon)
-    srid = 4326
-    order("ST_Distance(stations.latlon, ST_GeomFromText('POINT (#{lat} #{lon})', #{srid}))").limit(1).first
+    available.by_proximity(lat,lon).limit(1).first
   end
 end
