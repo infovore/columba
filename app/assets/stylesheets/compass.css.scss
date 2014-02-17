@@ -26,7 +26,7 @@ body {
 }
 #body {
   padding-top: 10px;
-  padding-bottom:60px;   /* Height of the footer */
+  padding-bottom:120px;   /* Height of the footer */
 
   #compass {
     width: 320px;
@@ -70,41 +70,34 @@ body {
   }
 }
 
-#footer {
-  position:absolute;
-  bottom:0;
-  width:100%;
-  height:40px;   /* Height of the footer */
-  background:#6cf;
-  .inner {
-    padding: 10px;
-  }
-}
-
 #deets {
-  margin: 20px 0 0;
-  padding: 0 10px;
-  width: 300px;
-  h2 {
-    font-weight: bold;
-    font-size: 24px;
-    margin: 0 0 10px;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
-  }
-  .dist {
-    float: left;
-    font-size: 30px;
-    width: 100px;
-  }
-  .racks {
-    color: #888;
-    float: right;
-    font-size: 24px;
-    padding-top: 3px;
-  }
-  span.free {
-    font-weight: bold;
+  position: absolute;
+  bottom: 0;
+  width: 320px;
+  height: 100px;
+  .inner {
+    padding: 0 10px;
+    h2 {
+      font-weight: bold;
+      font-size: 24px;
+      margin: 0 0 10px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    .dist {
+      float: left;
+      font-size: 30px;
+      width: 100px;
+    }
+    .racks {
+      color: #888;
+      float: right;
+      font-size: 24px;
+      padding-top: 3px;
+    }
+    span.free {
+      font-weight: bold;
+    }
   }
 }
 
@@ -134,4 +127,12 @@ body {
   p {
     margin: 0 0 10px;
   }
+}
+
+.about-toggle {
+  float: right;
+  padding: 5px 5px 0 0;
+  font-weight: bold;
+  text-decoration: none;
+  color: #888;
 }
