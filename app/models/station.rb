@@ -1,15 +1,20 @@
+require 'open-uri'
+
 class Station < ActiveRecord::Base
+  set_rgeo_factory_for_column(:latlon,
+    RGeo::Geographic.spherical_factory(:srid => 4326))
+
 
   delegate :lat, :to => :latlon
   delegate :lon, :to => :latlon
 
-  scope :open, -> {
+  scope :active, -> {
     where(is_installed: true,
           is_locked: false)
   }
 
   scope :available, -> {
-    open.where("number_empty_docks > 0")
+    active.where("number_empty_docks > 0")
   }
 
   scope :by_proximity, ->(lat,lon) {
@@ -17,8 +22,9 @@ class Station < ActiveRecord::Base
     order("ST_Distance(stations.latlon, ST_GeomFromText('POINT (#{lon} #{lat})', #{srid}))")
   }
 
-  set_rgeo_factory_for_column(:latlon,
-    RGeo::Geographic.spherical_factory(:srid => 4326))
+  def self.nearest_to(lat,lon)
+    available.by_proximity(lat,lon).limit(1).first
+  end
 
   def self.create_or_update_from(station_hash)
     station = Station.find_or_initialize_by(:terminal_name => station_hash['terminalName'])
@@ -37,7 +43,13 @@ class Station < ActiveRecord::Base
     )
   end
 
-  def self.nearest_to(lat,lon)
-    available.by_proximity(lat,lon).limit(1).first
+  def self.ingest_latest
+    path = "http://www.tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml"
+    hash = Hash.from_xml(open(path).read)
+
+    hash['stations']['station'].each do |station_hash|
+      Station.create_or_update_from(station_hash)
+    end
   end
+
 end
