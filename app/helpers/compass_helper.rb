@@ -1,0 +1,2 @@
+module CompassHelper
+end

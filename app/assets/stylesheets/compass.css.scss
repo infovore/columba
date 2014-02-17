@@ -1,0 +1,76 @@
+html,
+body {
+  margin:0;
+  padding:0;
+  height:100%;
+
+  font-family: Helvetica, Arial, sans-serif;
+}
+#container {
+  min-height:100%;
+  position:relative;
+}
+#header {
+  background:#ff0;
+  padding:10px;
+  h1 {
+    font-weight: bold;
+    text-align: center;
+    font-size: 18px;
+  }
+}
+#body {
+  padding-top: 10px;
+  padding-bottom:60px;   /* Height of the footer */
+
+  #compass {
+    width: 320px;
+    height: 320px;
+    border: 1px solid green;
+    background: image-url('rose.png') no-repeat;
+    background-opacity: 0.5;
+
+    #rose {
+      width: 100%;
+      width: 320px;
+      height: 320px;
+      background: image-url('north.png') no-repeat;
+
+      #arrow {
+        width: 100%;
+        height: 640px;
+        background: image-url('arrow.png') no-repeat;
+      }
+    }
+  }
+}
+
+@media 
+(-webkit-min-device-pixel-ratio: 2), 
+(min-resolution: 192dpi) { 
+  #body {
+    #compass {
+      background: image-url('rose_2x.png') no-repeat;
+      background-size: 320px;
+      #rose {
+        background: image-url('north_2x.png') no-repeat;
+        background-size: 320px;
+        #arrow {
+          background: image-url('arrow_2x.png') no-repeat;
+          background-size: 320px;
+        }
+      }
+    }
+  }
+}
+
+#footer {
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:40px;   /* Height of the footer */
+  background:#6cf;
+  .inner {
+    padding: 10px;
+  }
+}

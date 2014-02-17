@@ -1,0 +1,2 @@
+class CompassController < ApplicationController
+end
