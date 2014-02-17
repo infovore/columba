@@ -3,26 +3,29 @@
 
 $(document).ready(function() {
   $("#deets").hide();
-  if(navigator.geolocation) {
-    // send latlong to backend
-      // receive json representation of the nearest station and for now, paste
-      // it into the window
-      
-      // store the heading of the nearest station in the window
-      // update markup as appropriate
-      // store direction on window
 
+  $(".about-toggle").click(function() {
+    $("#about").fadeToggle('fast');
+    return false;
+  });
+
+  $(".close").click(function() {
+    $("#about").fadeOut('fast');
+    return false;
+  });
+
+  if(navigator.geolocation) {
     postLocation()
 
     setInterval(postLocation,3000);
 
-      window.addEventListener('deviceorientation', function(e) {
-        // get the arc value from north we computed and stored earlier
-        if(e.webkitCompassHeading) {
-          compassHeading = e.webkitCompassHeading;
-          $('#rose').css('-webkit-transform','rotate(-' + compassHeading + 'deg)');		
-        }
-      });
+    window.addEventListener('deviceorientation', function(e) {
+      // get the arc value from north we computed and stored earlier
+      if(e.webkitCompassHeading) {
+        compassHeading = e.webkitCompassHeading;
+        $('#rose').css('-webkit-transform','rotate(-' + compassHeading + 'deg)');		
+      }
+    });
   }
 });
 
@@ -33,7 +36,7 @@ function postLocation() {
       $("#deets .stationname").text(data.name);
       //$("#deets .dist").text(data);
       $("#deets .free").text(data.number_empty_docks);
-      $("#deets").show();
+      $("#deets").fadeIn();
 
       pointCompassAtStation(data, position);
     });

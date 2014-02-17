@@ -107,3 +107,31 @@ body {
     font-weight: bold;
   }
 }
+
+#about {
+  display: none;
+  position: absolute;
+  background: #fff;
+  top: 60px;
+  left: 20px;
+  width: 260px;
+  padding: 10px;
+  line-height: 1.4;
+  box-shadow: 3px 3px 5px #ccc;
+
+  a.close {
+    float: right;
+    font-weight: bold;
+    text-decoration: none;
+    color: #888;
+  }
+
+  h1 {
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  p {
+    margin: 0 0 10px;
+  }
+}
