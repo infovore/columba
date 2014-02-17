@@ -1,29 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>BorisbikeCompass</title>
+    <title>Bikehire Compass</title>
     <%= stylesheet_link_tag    "application", media: "all" %>
     <%= javascript_include_tag "application"  %>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="<%= image_path 'apple-touch-icon.png' %>" />
     
   </head>
   <body>
 
     <div id="container">
       <div id="header">
-        <h1>Borisbike Compass</h1>
+        <h1>Bikehire Compass</h1>
       </div>
       <div id="body">
         <%= yield %>
       </div>
       <div id="footer">
         <div class='inner'>
-          <a href='#' class='about'>About</a>
+          <a href='#' class='about-toggle'>About</a>
         </div>
       </div>
     </div>
 
+    <div id="about">
+      <a href="#" class='close'>x</a>
+      <h1>Bikehire Compass</h1>
+      <p>The Bikehire Compass always points to the nearest bike hire rack with empty spaces. It'll tell you how far away it is.</p>
+      <p>The compass updates its data every minute, and updates the compass in real time. Currently, it's only been tested on iOS so far.</p>
+      <p>Data courtesy of TFL. <a href='https://github.com/infovore/borisbike-compass'>Code is all at Github</a>. By <a href="http://tomarmitage.com">Tom Armitage</a>.</p>
+
+    </div>
   </body>
 </html>
