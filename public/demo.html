@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>Geolocation test</title>
+  </head>
+  <body>
+    <pre id='data'>
+    </pre>
+    <pre id='heading'>
+    </pre>
+    <script>
+      if(navigator.geolocation) {
+        navigator.geolocation.watchPosition(function (position) {
+          document.getElementById('data').innerText = JSON.stringify(position.coords).replace(/\,/g, ",\n");
+          // console.log(position);
+        });
+      }
+      window.addEventListener('deviceorientation', function(e) {
+        // get the arc value from north we computed and stored earlier
+        if(e.webkitCompassHeading) {
+          compassHeading = e.webkitCompassHeading;
+          document.getElementById('heading').innerText = compassHeading;
+        }
+      });
+    </script>
+  </body>
+</html>
