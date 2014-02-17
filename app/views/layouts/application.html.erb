@@ -17,13 +17,6 @@
       <%= yield %>
     </div>
 
-    <div id="about">
-      <a href="#" class='close'>x</a>
-      <h1>Bikehire Compass</h1>
-      <p>The Bikehire Compass always points to the nearest bike hire rack with empty spaces. It'll tell you how far away it is.</p>
-      <p>The compass updates its data every minute, and updates the compass in real time. Currently, it's only been tested on iOS so far.</p>
-      <p>Data courtesy of TFL. <a href='https://github.com/infovore/borisbike-compass'>Code is all at Github</a>. By <a href="http://tomarmitage.com">Tom Armitage</a>.</p>
-
-    </div>
+    <%= render :partial => "layouts/about_box" %>
   </body>
 </html>
