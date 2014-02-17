@@ -1,6 +1,7 @@
 require 'open-uri'
 
 namespace :bikecompass do
+  desc "Ingest latest state of all station"
   task :ingest => :environment do
     path = "http://www.tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml"
     hash = Hash.from_xml(open(path).read)
