@@ -2,7 +2,11 @@
 // All this logic will automatically be available in application.js.
 
 $(document).ready(function() {
+  window.showWhat = 'racks';
+
   $("#deets").hide();
+
+  showAppropriate(showWhat);
 
   $(".about-toggle").click(function() {
     $("#about").fadeToggle('fast');
@@ -27,18 +31,46 @@ $(document).ready(function() {
       }
     });
   }
+
+  $("#compass").click(function(e) {
+    if(window.showWhat == 'bikes') {
+      window.showWhat = 'racks';
+    } else {
+      window.showWhat = 'bikes';
+    }
+    postLocation();
+
+    e.preventDefault();
+  });
 });
+
+function showAppropriate(what) {
+  if(what == 'bikes') {
+    $(".showbikes").show();
+    $(".showracks").hide();
+  } else {
+    $(".showbikes").hide();
+    $(".showracks").show();
+  }
+}
 
 function postLocation() {
   navigator.geolocation.getCurrentPosition(function(position) {
     $.post('/stations/nearest', {lat: position.coords.latitude, lon: position.coords.longitude}, function(data) {
       console.log(data);
-      $("#deets .stationname").text(data.name);
-      //$("#deets .dist").text(data);
-      $("#deets .free").text(data.number_empty_docks);
+      showAppropriate(window.showWhat);
+
+      $("#deets .showracks .stationname").text(data.racks.name);
+      $("#deets .showracks .free").text(data.racks.number_empty_docks);
+      $("#deets .showbikes .stationname").text(data.bikes.name);
+      $("#deets .showbikes .free").text(data.bikes.number_bikes);
       $("#deets").fadeIn();
 
-      pointCompassAtStation(data, position);
+      if(window.showWhat == 'bikes') {
+        pointCompassAtStation(data.bikes, position);
+      } else {
+        pointCompassAtStation(data.racks, position);
+      }
     });
   });
 }
@@ -77,7 +109,11 @@ function distanceStringFromKm(km) {
 function pointCompassAtStation(data, currentPos) {
   var distance = distanceBetween(data.lat, data.lon, currentPos.coords.latitude, currentPos.coords.longitude);
   // get latlon from station
-  $("#deets .dist").text(distanceStringFromKm(distance[0]));
+  if(showWhat == 'bikes') {
+    $("#deets .showbikes .dist").text(distanceStringFromKm(distance[0]));
+  } else {
+    $("#deets .showracks .dist").text(distanceStringFromKm(distance[0]));
+  }
   // work out heading
   $('#arrow').css('-webkit-transform','rotate(' + distance[1] + 'deg)');		
 

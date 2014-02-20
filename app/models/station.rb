@@ -13,8 +13,12 @@ class Station < ActiveRecord::Base
           is_locked: false)
   }
 
-  scope :available, -> {
+  scope :available_racks, -> {
     active.where("number_empty_docks > 0")
+  }
+
+  scope :available_bikes, -> {
+    active.where("number_bikes > 0")
   }
 
   scope :by_proximity, ->(lat,lon) {
@@ -22,8 +26,12 @@ class Station < ActiveRecord::Base
     order("ST_Distance(stations.latlon, ST_GeomFromText('POINT (#{lon} #{lat})', #{srid}))")
   }
 
-  def self.nearest_to(lat,lon)
-    available.by_proximity(lat,lon).limit(1).first
+  def self.nearest_with_empty_racks_to(lat,lon)
+    available_racks.by_proximity(lat,lon).limit(1).first
+  end
+
+  def self.nearest_with_bikes_to(lat,lon)
+    available_bikes.by_proximity(lat,lon).limit(1).first
   end
 
   def self.create_or_update_from(station_hash)
