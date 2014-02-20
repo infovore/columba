@@ -21,13 +21,17 @@ $(document).ready(function() {
   if(navigator.geolocation) {
     postLocation()
 
-    setInterval(postLocation,3000);
+    setInterval(postLocation,1000);
 
     window.addEventListener('deviceorientation', function(e) {
       // get the arc value from north we computed and stored earlier
       if(e.webkitCompassHeading) {
         compassHeading = e.webkitCompassHeading + window.orientation;
         $('#rose').css('-webkit-transform','rotate(-' + compassHeading + 'deg)');		
+        // get position and
+        navigator.geolocation.getCurrentPosition(function(position) {
+          updateCompass(position);
+        });
       }
     });
   }
@@ -58,22 +62,32 @@ function showAppropriate(what) {
 function postLocation() {
   navigator.geolocation.getCurrentPosition(function(position) {
     $.post('/stations/nearest', {lat: position.coords.latitude, lon: position.coords.longitude}, function(data) {
-      console.log(data);
-      showAppropriate(window.showWhat);
-
-      $("#deets .showracks .stationname").text(data.racks.name);
-      $("#deets .showracks .free").text(data.racks.number_empty_docks);
-      $("#deets .showbikes .stationname").text(data.bikes.name);
-      $("#deets .showbikes .free").text(data.bikes.number_bikes);
-      $("#deets").fadeIn();
-
-      if(window.showWhat == 'bikes') {
-        pointCompassAtStation(data.bikes, position);
-      } else {
-        pointCompassAtStation(data.racks, position);
-      }
+      //console.log(data);
+      updateDisplay(data, position);
     });
   });
+}
+
+function updateDisplay(data, position) {
+  showAppropriate(window.showWhat);
+
+  $("#deets .showracks .stationname").text(data.racks.name);
+  $("#deets .showracks .free").text(data.racks.number_empty_docks);
+  $("#deets .showbikes .stationname").text(data.bikes.name);
+  $("#deets .showbikes .free").text(data.bikes.number_bikes);
+  $("#deets").fadeIn();
+
+  window.racksStation = data.racks;
+  window.bikesStation = data.bikes;
+  updateCompass(position);
+}
+
+function updateCompass(position) {
+  if(window.showWhat == 'bikes') {
+    pointCompassAtStation(window.bikesStation, position);
+  } else {
+    pointCompassAtStation(window.racksStation, position);
+  }
 }
 
 function distanceBetween(lat1,lon1,lat2,lon2){
@@ -94,7 +108,7 @@ function distanceBetween(lat1,lon1,lat2,lon2){
 }
 
 function distanceStringFromKm(km) {
-  var distanceInK = km.toFixed(2);
+  var distanceInK = km.toFixed(3);
   var string = "";
   if(distanceInK >= 1) {
     string = distanceInK + "km";
@@ -108,7 +122,7 @@ function distanceStringFromKm(km) {
 }
 
 function pointCompassAtStation(data, currentPos) {
-  var distance = distanceBetween(data.lat, data.lon, currentPos.coords.latitude, currentPos.coords.longitude);
+  var distance = distanceBetween(currentPos.coords.latitude, currentPos.coords.longitude, data.lat, data.lon);
   // get latlon from station
   if(showWhat == 'bikes') {
     $("#deets .showbikes .dist").text(distanceStringFromKm(distance[0]));
@@ -117,6 +131,5 @@ function pointCompassAtStation(data, currentPos) {
   }
   // work out heading
   $('#arrow').css('-webkit-transform','rotate(' + distance[1] + 'deg)');		
-
 }
 
