@@ -26,7 +26,7 @@ $(document).ready(function() {
     window.addEventListener('deviceorientation', function(e) {
       // get the arc value from north we computed and stored earlier
       if(e.webkitCompassHeading) {
-        compassHeading = e.webkitCompassHeading;
+        compassHeading = e.webkitCompassHeading + window.orientation;
         $('#rose').css('-webkit-transform','rotate(-' + compassHeading + 'deg)');		
       }
     });
@@ -53,6 +53,7 @@ function showAppropriate(what) {
     $(".showracks").show();
   }
 }
+
 
 function postLocation() {
   navigator.geolocation.getCurrentPosition(function(position) {
