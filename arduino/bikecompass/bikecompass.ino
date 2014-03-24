@@ -25,6 +25,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(16, PIN, NEO_GRB + NEO_KHZ800);
 #endif
 
 int currentLedIndex = 0;
+int currentStationId = 0;
 
 void setup()   {                
   Serial.begin(9600);
@@ -38,8 +39,8 @@ void setup()   {
  
 
   // Setup callbacks for SerialCommand commands
-  sCmd.addCommand("D",     handleDirection);  // Converts two arguments to integers and echos them back
-  sCmd.addDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
+  sCmd.addCommand("D", handleDirection);  // D [direction] [distance] [stationID]
+  sCmd.addDefaultHandler(unrecognized);   // Handler for command that isn't matched  (says "What?")
   Serial.println("Ready");
   
   // text display tests
@@ -78,7 +79,18 @@ void handleDirection() {
     distance = 2000;
   }
   
-  pulse(); // TODO: only pulse if it's a different station ident.
+  arg = sCmd.next();
+  if (arg != NULL) 
+  {
+    id = atoi(arg);
+  } else {
+    id = currentStationId;
+  }
+   
+  if(id != currentStationId) { 
+    pulse(); // TODO: only pulse if it's a different station ident.
+    currentStationId = id;
+  }
   lightHeading(heading, distance);
   display.clearDisplay();
   display.setCursor(0,0);
