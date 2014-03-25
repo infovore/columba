@@ -93,10 +93,16 @@ void handleDirection() {
   }
   lightHeading(heading, distance);
   display.clearDisplay();
+  display.setTextSize(1);
   display.setCursor(0,0);
   display.println("Heading");
+  display.setCursor(64,0);
+  display.println("Distance");
+  display.setTextSize(2);
   display.setCursor(0,16);
-  display.println(arg);
+  display.println(heading);
+  display.setCursor(64,16);
+  display.println(distance);
   display.display();
 }
 
@@ -131,9 +137,9 @@ int normalizeLedIndex(int i) {
 
 int nearMiddleFar(int distance) {
   // distance in m
-  if(distance < 100) {
+  if(distance <= 100) {
     return 2;
-  } else if(distance < 500) {
+  } else if(distance <= 500) {
     return 1;
   } else {
     return 0;
