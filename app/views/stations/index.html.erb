@@ -1,0 +1,40 @@
+<h1>Stations</h1>
+
+<table class='table'>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>terminal_name</th>
+      <th>lat</th>
+      <th>lon</th>
+      <th>is_installed</th>
+      <th>is_locked</th>
+      <th>install_date</th>
+      <th>removal_date</th>
+      <th>is_temporary</th>
+      <th>number_bikes</th>
+      <th>number_docks</th>
+      <th>number_empty_docks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for station in @stations %>
+      <tr>
+        <td><%= station.id %></td>
+        <td><%= station.name %></td>
+        <td><%= station.terminal_name %></td>
+        <td><%= station.lat %></td>
+        <td><%= station.lon %></td>
+        <td><%= station.is_installed %></td>
+        <td><%= station.is_locked %></td>
+        <td><%= station.install_date %></td>
+        <td><%= station.removal_date %></td>
+        <td><%= station.is_temporary %></td>
+        <td><%= station.number_bikes %></td>
+        <td><%= station.number_docks %></td>
+        <td><%= station.number_empty_docks %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
