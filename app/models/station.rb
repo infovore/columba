@@ -26,6 +26,33 @@ class Station < ActiveRecord::Base
     order("ST_Distance(stations.latlon, ST_GeomFromText('POINT (#{lon} #{lat})', #{srid}))")
   }
 
+  def to_geo_json
+    {
+      :type => "Feature",
+      :geometry => {
+        :type => "Point",
+        :coordinates => [lon,lat]
+      },
+      :properties => {
+        :name => name,
+        :is_installed => is_installed,
+        :is_locked => is_locked,
+        :install_date => install_date,
+        :removal_date => removal_date,
+        :is_temporary => is_temporary,
+        :number_bikes => number_bikes,
+        :number_docks => number_docks,
+        :number_empty_docks => number_empty_docks,
+      }
+    }
+  end
+
+  def self.collection_to_feature_collection(stations)
+    { :type => "FeatureCollection",
+      :features => stations.map {|s| s.to_geo_json}
+    }.to_json
+  end
+
   def self.nearest_with_empty_racks_to(lat,lon)
     available_racks.by_proximity(lat,lon).limit(1).first
   end
