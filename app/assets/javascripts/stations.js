@@ -19,10 +19,12 @@ $(document).ready(function(){
 
   doMapMarkers();
 
+  setInterval(doMapMarkers,60*1000);
 });
 
 
 function doMapMarkers() {
+  console.log('getting map markers');
 
   $.get('/stations.json', function(data){
     window.newMarkers = L.geoJson(data, {
