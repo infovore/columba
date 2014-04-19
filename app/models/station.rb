@@ -1,6 +1,8 @@
 require 'open-uri'
 
 class Station < ActiveRecord::Base
+  attr_accessor :distance_and_arc
+
   set_rgeo_factory_for_column(:latlon,
     RGeo::Geographic.spherical_factory(:srid => 4326))
 
@@ -47,6 +49,24 @@ class Station < ActiveRecord::Base
     }
   end
 
+  def distance_and_arc_from_lonlat_to_station(origin_lon,origin_lat)
+    # traf is 51.5081° N, 0.1281° W
+    deg = Station.connection.select_all("select degrees( ST_Azimuth(ST_Point(#{origin_lon},#{origin_lat}), ST_Point(#{lon},#{lat})))").rows[0][0] # first field of first row
+
+    distance = Station.connection.select_all("SELECT round(CAST(ST_Distance_Sphere(ST_Point(#{origin_lon},#{origin_lat}), ST_Point(#{lon},#{lat})) As numeric),2) As dist_meters").rows[0][0]
+
+    {:distance => distance, :arc => deg}
+  end
+
+  # these two methods access the decorated distance and arc
+  def distance
+    distance_and_arc[:distance]
+  end
+
+  def arc
+    distance_and_arc[:arc]
+  end
+
   def self.collection_to_feature_collection(stations)
     { :type => "FeatureCollection",
       :features => stations.map {|s| s.to_geo_json}
@@ -54,11 +74,17 @@ class Station < ActiveRecord::Base
   end
 
   def self.nearest_with_empty_racks_to(lat,lon)
-    available_racks.by_proximity(lat,lon).limit(1).first
+    station = available_racks.by_proximity(lat,lon).limit(1).first
+    # now decorate that with distance and arc from origin
+    station.distance_and_arc = station.distance_and_arc_from_lonlat_to_station(lon,lat)
+    station
   end
 
   def self.nearest_with_bikes_to(lat,lon)
-    available_bikes.by_proximity(lat,lon).limit(1).first
+    station = available_bikes.by_proximity(lat,lon).limit(1).first
+    # now decorate that with distance and arc from origin
+    station.distance_and_arc = station.distance_and_arc_from_lonlat_to_station(lon,lat)
+    station
   end
 
   def self.create_or_update_from(station_hash)
