@@ -90,23 +90,6 @@ function updateCompass(position) {
   }
 }
 
-function distanceBetween(lat1,lon1,lat2,lon2){
-  var R = 6371; // km
-  var dLat = (lat2-lat1) * Math.PI / 180;
-  var dLon = (lon2-lon1) * Math.PI / 180;
-  var lat1 = (lat1) * Math.PI / 180;
-  var lat2 = (lat2) * Math.PI / 180;
-
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-  var d = R * c;
-
-  arc = Math.atan2(dLat , dLon) * 180 / Math.PI
-
-  return [d,arc]
-}
-
 function distanceStringFromKm(km) {
   var distanceInK = km.toFixed(3);
   var string = "";
@@ -121,15 +104,30 @@ function distanceStringFromKm(km) {
   return string;
 }
 
+function distanceStringFromM(m) {
+  var km = m / 1000;
+  var distanceInK = km.toFixed(3);
+  var string = "";
+  if(distanceInK >= 1) {
+    string = distanceInK + "km";
+  } else if(distanceInK >= 0.01) {
+    distanceInM = distanceInK * 1000;
+    string = distanceInM + "m";
+  } else {
+    string = "here!";
+  }
+  return string;
+}
+
 function pointCompassAtStation(data, currentPos) {
-  var distance = distanceBetween(currentPos.coords.latitude, currentPos.coords.longitude, data.lat, data.lon);
+  var distance = data.distance
   // get latlon from station
   if(showWhat == 'bikes') {
-    $("#deets .showbikes .dist").text(distanceStringFromKm(distance[0]));
+    $("#deets .showbikes .dist").text(distanceStringFromM(data.distance));
   } else {
-    $("#deets .showracks .dist").text(distanceStringFromKm(distance[0]));
+    $("#deets .showracks .dist").text(distanceStringFromM(data.distance));
   }
   // work out heading
-  $('#arrow').css('-webkit-transform','rotate(' + distance[1] + 'deg)');		
+  $('#arrow').css('-webkit-transform','rotate(' + data.arc + 'deg)');		
 }
 
