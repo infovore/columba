@@ -119,15 +119,53 @@ function distanceStringFromM(m) {
   return string;
 }
 
-function pointCompassAtStation(data, currentPos) {
-  var distance = data.distance
-  // get latlon from station
-  if(showWhat == 'bikes') {
-    $("#deets .showbikes .dist").text(distanceStringFromM(data.distance));
-  } else {
-    $("#deets .showracks .dist").text(distanceStringFromM(data.distance));
-  }
-  // work out heading
-  $('#arrow').css('-webkit-transform','rotate(' + data.arc + 'deg)');		
+function distanceBetween(lat1,lon1,lat2,lon2){
+  var R = 6371; // km
+  var dLat = (lat2-lat1) * Math.PI / 180;
+  var dLon = (lon2-lon1) * Math.PI / 180;
+  var lat1 = (lat1) * Math.PI / 180;
+  var lat2 = (lat2) * Math.PI / 180;
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c;
+
+  var y = Math.sin(dLon) * Math.cos(lat2);
+  var x = Math.cos(lat1)*Math.sin(lat2) -
+          Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
+  var brng = Math.atan2(y, x).toDeg();
+
+  return [d,brng]
 }
 
+function pointCompassAtStation(data, currentPos) {
+  //var distance = data.distance
+
+  var distanceAndArc = distanceBetween(currentPos.coords.latitude, currentPos.coords.longitude, data.lat, data.lon);
+  var distance = distanceAndArc[0];
+  var arc = distanceAndArc[1];
+  //
+  // get latlon from station
+  if(showWhat == 'bikes') {
+    $("#deets .showbikes .dist").text(distanceStringFromKm(distance));
+  } else {
+    $("#deets .showracks .dist").text(distanceStringFromKm(distance));
+  }
+  // work out heading
+  $('#arrow').css('-webkit-transform','rotate(' + arc + 'deg)');		
+}
+
+/** Converts numeric degrees to radians */
+if (typeof Number.prototype.toRad == 'undefined') {
+  Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+  }
+}
+
+/** Converts radians to numeric (signed) degrees */
+if (typeof Number.prototype.toDeg == 'undefined') {
+  Number.prototype.toDeg = function() {
+    return this * 180 / Math.PI;
+  }
+}
