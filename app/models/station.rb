@@ -50,7 +50,6 @@ class Station < ActiveRecord::Base
   end
 
   def distance_and_arc_from_lonlat_to_station(origin_lon,origin_lat)
-    # traf is 51.5081° N, 0.1281° W
     deg = Station.connection.select_all("select degrees( ST_Azimuth(ST_Point(#{origin_lon},#{origin_lat}), ST_Point(#{lon},#{lat})))").rows[0][0] # first field of first row
 
     distance = Station.connection.select_all("SELECT round(CAST(ST_Distance_Sphere(ST_Point(#{origin_lon},#{origin_lat}), ST_Point(#{lon},#{lat})) As numeric),2) As dist_meters").rows[0][0]
