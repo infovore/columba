@@ -2,6 +2,7 @@
 // All this logic will automatically be available in application.js.
 
 $(document).ready(function() {
+  $("html").on("touchmove", false);
   window.showWhat = 'racks';
 
   $("#deets").hide();
