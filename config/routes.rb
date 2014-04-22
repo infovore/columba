@@ -5,5 +5,6 @@ BorisbikeCompass::Application.routes.draw do
     end
   end
   resource :compass, :controller => "compass"
+  resources :user_locations
   root "compass#show"
 end

@@ -1,0 +1,24 @@
+<h1>Locations</h1>
+
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>lat</th>
+      <th>lon</th>
+      <th>heading</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for location in @locations %>
+      <tr>
+        <td><%= location.id %></td>
+        <td><%= location.name %></td>
+        <td><%= location.lat %></td>
+        <td><%= location.lon %></td>
+        <td><%= location.heading %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
