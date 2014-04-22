@@ -16,19 +16,19 @@ getNearestStation();
 // handle a packet of JSON when it comes in
 function handleStationData(data) {
   // send the station as a uart message to our Arduino
-  server.log("*** Sending arduino the station " + data);
   local distance = data.racks.distance_rounded
-  local name = data.racks.name
+  local station_id = data.racks.original_id
   local arc = data.racks.arc_rounded
 
-  if (data.racks.offset_bearing)
-    arc = arc + data.racks.offset_bearing;
-  if (arc > 359)
-    arc = arc - 360;
+  arc = arc - data.racks.offset_bearing_rounded;
+  if (arc < 0)
+    arc = arc + 360;
       
-  local string = "D " + arc + " " + distance + " " + name + "\r"; // SerialCommand expects carriage-return termination
+  local string = "D " + arc + " " + distance + " " + station_id + "\r"; // SerialCommand expects carriage-return termination
+  server.log("*** Sending arduino string " + string);
   arduino.write(string);
 }
 
 // handle messages from the server
 agent.on("station", handleStationData);
+
