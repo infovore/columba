@@ -55,6 +55,9 @@ class Station < ActiveRecord::Base
 
     deg = deg.to_f
     distance = distance.to_f
+    if offset_bearing
+      offset_bearing = offset_bearing.to_f
+    end
 
     {:distance => distance, :arc => deg, :offset_bearing => offset_bearing}
   end
@@ -80,6 +83,9 @@ class Station < ActiveRecord::Base
     distance_and_arc[:offset_bearing]
   end
 
+  def offset_bearing_rounded
+    offset_bearing.round if offset_bearing
+  end
 
   def self.collection_to_feature_collection(stations)
     { :type => "FeatureCollection",

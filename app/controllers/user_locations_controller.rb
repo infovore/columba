@@ -12,7 +12,7 @@ class UserLocationsController < ApplicationController
       hash = {:racks => nearest_with_empty_racks,
               :bikes => nearest_with_bikes}
 
-      render :json => hash.to_json(:methods => [:lat,:lon, :distance_rounded, :arc_rounded, :offset_bearing])
+      render :json => hash.to_json(:methods => [:lat,:lon, :distance_rounded, :arc_rounded, :offset_bearing_rounded])
     end
   end
 end
