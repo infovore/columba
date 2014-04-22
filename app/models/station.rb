@@ -80,11 +80,15 @@ class Station < ActiveRecord::Base
   end
 
   def offset_bearing
-    distance_and_arc[:offset_bearing]
+    distance_and_arc[:offset_bearing] || 0
   end
 
   def offset_bearing_rounded
-    offset_bearing.round if offset_bearing
+    if offset_bearing
+      offset_bearing.round 
+    else
+      0
+    end
   end
 
   def self.collection_to_feature_collection(stations)
