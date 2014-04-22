@@ -5,6 +5,10 @@ BorisbikeCompass::Application.routes.draw do
     end
   end
   resource :compass, :controller => "compass"
-  resources :user_locations
+  resources :user_locations do
+    member do
+      get 'nearest_station'
+    end
+  end
   root "compass#show"
 end

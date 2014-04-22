@@ -48,12 +48,12 @@ class Station < ActiveRecord::Base
     }
   end
 
-  def distance_and_arc_from_lonlat_to_station(origin_lon,origin_lat)
+  def distance_and_arc_from_lonlat_to_station(origin_lon,origin_lat,offset_bearing=nil)
     deg = Station.connection.select_all("select degrees( ST_Azimuth(ST_Point(#{origin_lon},#{origin_lat}), ST_Point(#{lon},#{lat})))").rows[0][0] # first field of first row
 
     distance = Station.connection.select_all("SELECT round(CAST(ST_Distance_Sphere(ST_Point(#{origin_lon},#{origin_lat}), ST_Point(#{lon},#{lat})) As numeric),2) As dist_meters").rows[0][0]
 
-    {:distance => distance, :arc => deg}
+    {:distance => distance, :arc => deg, :offset_bearing => offset_bearing}
   end
 
   # these two methods access the decorated distance and arc
@@ -65,23 +65,30 @@ class Station < ActiveRecord::Base
     distance_and_arc[:arc]
   end
 
+  def offset_bearing
+    distance_and_arc[:offset_bearing]
+  end
+
+
   def self.collection_to_feature_collection(stations)
     { :type => "FeatureCollection",
       :features => stations.map {|s| s.to_geo_json}
     }.to_json
   end
 
-  def self.nearest_with_empty_racks_to(lat,lon)
+  def self.nearest_with_empty_racks_to(lat,lon,heading = nil)
     station = available_racks.by_proximity(lat,lon).limit(1).first
-    # now decorate that with distance and arc from origin
-    station.distance_and_arc = station.distance_and_arc_from_lonlat_to_station(lon,lat)
+    # now decorate that with distance, arc from origin, and offset bearing if
+    # appropriate
+    station.distance_and_arc = station.distance_and_arc_from_lonlat_to_station(lon,lat,heading)
     station
   end
 
-  def self.nearest_with_bikes_to(lat,lon)
+  def self.nearest_with_bikes_to(lat,lon,heading = nil)
     station = available_bikes.by_proximity(lat,lon).limit(1).first
-    # now decorate that with distance and arc from origin
-    station.distance_and_arc = station.distance_and_arc_from_lonlat_to_station(lon,lat)
+    # now decorate that with distance, arc from origin, and offset bearing if
+    # appropriate
+    station.distance_and_arc = station.distance_and_arc_from_lonlat_to_station(lon,lat,heading)
     station
   end
 
