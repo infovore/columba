@@ -6,7 +6,9 @@
 #include <Adafruit_NeoPixel.h>
 #include <SoftwareSerial.h> // have to include this for sCmd to compile correctly
 
-SerialCommand sCmd;     // The demo SerialCommand object
+SoftwareSerial impSerial(8,7); // RX on 8, TX on 7 (we're going to ignore TX for now);
+
+SerialCommand sCmd(impSerial);     // The demo SerialCommand object
 
 // If using software SPI (the default case):
 #define OLED_MOSI   9
@@ -16,7 +18,7 @@ SerialCommand sCmd;     // The demo SerialCommand object
 #define OLED_RESET 13
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 
-#define PIN 6
+#define PIN 8
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(16, PIN, NEO_GRB + NEO_KHZ800);
 
 
@@ -29,6 +31,7 @@ int currentStationId = 0;
 
 void setup()   {                
   Serial.begin(9600);
+  impSerial.begin(9600);
   
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
