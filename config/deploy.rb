@@ -7,7 +7,7 @@ set :repo_url, 'git@github.com:infovore/borisbike-compass.git'
 set :deploy_via, :remote_cache
 
 # files to exclude
-set :copy_exclude, [".git", ".DS_Store", ".gitignore", ".gitmodules"]
+set :copy_exclude, [".git", ".DS_Store", ".gitignore", ".gitmodules", "arduino", "processing", "imp"]
 
 set :keep_releases, 5
 
