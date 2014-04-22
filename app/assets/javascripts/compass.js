@@ -27,8 +27,8 @@ $(document).ready(function() {
     window.addEventListener('deviceorientation', function(e) {
       // get the arc value from north we computed and stored earlier
       if(e.webkitCompassHeading) {
-        compassHeading = e.webkitCompassHeading + window.orientation;
-        $('#rose').css('-webkit-transform','rotate(-' + compassHeading + 'deg)');		
+        window.compassHeading = e.webkitCompassHeading + window.orientation;
+        $('#rose').css('-webkit-transform','rotate(-' + window.compassHeading + 'deg)');		
         // get position and
         navigator.geolocation.getCurrentPosition(function(position) {
           updateCompass(position);
@@ -62,10 +62,25 @@ function showAppropriate(what) {
 
 function postLocation() {
   navigator.geolocation.getCurrentPosition(function(position) {
-    $.post('/stations/nearest', {lat: position.coords.latitude, lon: position.coords.longitude}, function(data) {
+    var postData;
+    var params = urlParams();
+    postData = {lat: position.coords.latitude,
+                lon: position.coords.longitude}
+
+    if('name' in params) {
+      if(window.compassHeading) {
+        postData.heading = window.compassHeading;
+      }
+      postData.name = params.name;
+      console.log("I'd log my data for user " + params.name);
+      console.log(postData);
+    }
+
+    $.post('/stations/nearest', postData, function(data) {
       //console.log(data);
       updateDisplay(data, position);
     });
+
   });
 }
 
@@ -169,4 +184,18 @@ if (typeof Number.prototype.toDeg == 'undefined') {
   Number.prototype.toDeg = function() {
     return this * 180 / Math.PI;
   }
+}
+
+function urlParams() {
+  var match,
+      pl     = /\+/g,  // Regex for replacing addition symbol with a space
+      search = /([^&=]+)=?([^&]*)/g,
+      decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+      query  = window.location.search.substring(1);
+
+    params = {};
+    while (match = search.exec(query))
+       params[decode(match[1])] = decode(match[2]);
+
+    return params;
 }
