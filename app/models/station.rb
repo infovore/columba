@@ -53,6 +53,9 @@ class Station < ActiveRecord::Base
 
     distance = Station.connection.select_all("SELECT round(CAST(ST_Distance_Sphere(ST_Point(#{origin_lon},#{origin_lat}), ST_Point(#{lon},#{lat})) As numeric),2) As dist_meters").rows[0][0]
 
+    deg = deg.to_f
+    distance = distance.to_f
+
     {:distance => distance, :arc => deg, :offset_bearing => offset_bearing}
   end
 
@@ -63,6 +66,14 @@ class Station < ActiveRecord::Base
 
   def arc
     distance_and_arc[:arc]
+  end
+
+  def distance_rounded
+    distance.round
+  end
+
+  def arc_rounded
+    arc.round
   end
 
   def offset_bearing
