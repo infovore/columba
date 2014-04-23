@@ -18,7 +18,7 @@ SerialCommand sCmd(impSerial);     // The demo SerialCommand object
 #define OLED_RESET 13
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 
-#define PIN 8
+#define PIN 6
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(16, PIN, NEO_GRB + NEO_KHZ800);
 
 
@@ -77,6 +77,7 @@ void handleDirection() {
   arg = sCmd.next();
   if (arg != NULL)
   { 
+
     distance = atoi(arg);
   } else {
     distance = 2000;
