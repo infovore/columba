@@ -161,7 +161,7 @@ function pointCompassAtStation(data, currentPos) {
   var distanceAndArc = distanceBetween(currentPos.coords.latitude, currentPos.coords.longitude, data.lat, data.lon);
   var distance = distanceAndArc[0];
   var arc = distanceAndArc[1];
-  //
+
   // get latlon from station
   if(showWhat == 'bikes') {
     $("#deets .showbikes .dist").text(distanceStringFromKm(distance));
@@ -170,6 +170,9 @@ function pointCompassAtStation(data, currentPos) {
   }
   // work out heading
   $('#arrow').css('-webkit-transform','rotate(' + arc + 'deg)');		
+
+  var distanceInM = distance * 1000;
+  setArrowDistance(distanceInM);
 }
 
 /** Converts numeric degrees to radians */
@@ -198,4 +201,14 @@ function urlParams() {
        params[decode(match[1])] = decode(match[2]);
 
     return params;
+}
+
+function setArrowDistance(distance) {
+  if(distance <= 100) {
+    $("#arrow").attr('class', '');
+  } else if(distance <= 500) {
+    $("#arrow").attr('class', 'middle');
+  } else {
+    $("#arrow").attr('class', 'far');
+  }
 }

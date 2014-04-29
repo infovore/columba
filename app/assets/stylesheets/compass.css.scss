@@ -44,9 +44,15 @@ body {
       #arrow {
         width: 320px;
         height: 320px;
-        background: image-url('arrow.png') no-repeat;
+        background: image-url('arrow_green.png') no-repeat;
         transform-origin: 50% 50%;
         -webkit-transform-origin: 50% 50%;
+        &.middle {
+          background: image-url('arrow_orange.png') no-repeat;
+        }
+        &.far {
+          background: image-url('arrow_red.png') no-repeat;
+        }
       }
     }
   }
